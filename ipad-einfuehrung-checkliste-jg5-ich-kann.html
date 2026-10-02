@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPad-Einführung Jahrgang 5 – Ich-kann-Ziele für Schüler:innen</title>
+<style>
+  :root{
+    --colw: 66px;
+    --bg: #eef2f4;
+    --paper: #ffffff;
+    --ink: #1c2b36;
+    --ink-soft: #556773;
+    --navy: #1f3a52;
+    --line: #d7dfe3;
+    --erklaert: #2f8f7b;
+    --erklaert-bg: #e4f3ef;
+    --angewendet: #c97a2e;
+    --angewendet-bg: #fbeddc;
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.45;
+    padding: 32px 16px 64px;
+  }
+
+  .sheet{
+    max-width: 780px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 40px 44px 32px;
+  }
+
+  header h1{
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    color: var(--navy);
+    margin: 0 0 4px;
+    letter-spacing: 0.2px;
+  }
+  header .subtitle{
+    color: var(--ink-soft);
+    font-size: 14.5px;
+    margin: 0 0 20px;
+  }
+
+  .toolbar{
+    display:flex;
+    gap: 10px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .toolbar button{
+    font: inherit;
+    font-size: 13.5px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid var(--navy);
+    background: var(--navy);
+    color: #fff;
+    cursor: pointer;
+  }
+  .toolbar button.secondary{
+    background: transparent;
+    color: var(--navy);
+  }
+  .toolbar button:hover{ opacity: 0.88; }
+
+  .progress-wrap{
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    background: #f7f9fa;
+  }
+  .progress-row{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    font-size: 13px;
+    margin: 6px 0;
+  }
+  .progress-row .label{ width: 92px; color: var(--ink-soft); flex-shrink:0; }
+  .bar-track{
+    flex:1;
+    height: 8px;
+    background: #e2e8ea;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill{ height: 100%; border-radius: 4px; transition: width .25s ease; }
+  .bar-fill.erklaert{ background: var(--erklaert); }
+  .bar-fill.angewendet{ background: var(--angewendet); }
+  .progress-row .count{ width: 48px; text-align:right; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+  section.group{
+    margin-bottom: 26px;
+  }
+  section.group h2{
+    font-size: 15px;
+    color: var(--navy);
+    border-bottom: 2px solid var(--navy);
+    padding-bottom: 6px;
+    margin: 0 0 4px;
+  }
+  .col-headers{
+    display:grid;
+    grid-template-columns: 1fr var(--colw) var(--colw);
+    gap: 10px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 6px 0 2px;
+  }
+  .col-headers span{ text-align:center; }
+  .col-headers span.ghost{ visibility:hidden; }
+  .col-headers .short{ display:none; }
+
+  .item{
+    display:grid;
+    grid-template-columns: 1fr var(--colw) var(--colw);
+    align-items:center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .item:last-child{ border-bottom: none; }
+  .item .desc{ font-size: 14.5px; }
+
+  .checks{ display: contents; }
+  .checkbox{
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: 1.5px solid #9fb0b8;
+    cursor: pointer;
+    position: relative;
+    background: #fff;
+    justify-self: center;
+  }
+  .checkbox.checked{ border-color: transparent; }
+  .checkbox.checked::after{
+    content:"";
+    position:absolute;
+    left: 6px; top: 2px;
+    width: 7px; height: 12px;
+    border: solid white;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+  }
+  .checkbox[data-stage="erklaert"].checked{ background: var(--erklaert); }
+  .checkbox[data-stage="angewendet"].checked{ background: var(--angewendet); }
+
+  footer{
+    margin-top: 20px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+  }
+
+  @media (max-width: 640px){
+    body{ padding: 20px 8px 48px; }
+    .sheet{ padding: 26px 20px; }
+    header h1{ font-size: 22px; }
+    header .subtitle{ font-size: 13.5px; }
+    .item .desc{ font-size: 13.5px; }
+  }
+
+  @media (max-width: 460px){
+    :root{ --colw: 46px; }
+    .sheet{ padding: 20px 14px; }
+    header h1{ font-size: 19px; }
+    .toolbar button{ flex:1; text-align:center; }
+    .item, .col-headers{ gap: 6px; }
+    .item .desc{ font-size: 12.8px; }
+    .col-headers{ font-size: 8.5px; letter-spacing: 0; }
+    .col-headers .full{ display:none; }
+    .col-headers .short{ display:inline; }
+    .checkbox{ width: 20px; height: 20px; }
+    .progress-row .label{ width: 68px; font-size: 12px; }
+    .progress-row .count{ width: 38px; font-size: 12px; }
+  }
+
+  @media print{
+    body{ background: #fff; padding: 0; }
+    .sheet{ border: none; padding: 6px 8px; max-width: 100%; }
+    .toolbar, .progress-wrap{ display: none; }
+    .checkbox{ background: #fff !important; border: 1.4px solid #333 !important; }
+    .checkbox.checked::after{ display: none !important; }
+    section.group{ break-inside: avoid; }
+    footer{ display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header>
+    <h1>iPad-Einführung Jahrgang 5</h1>
+    <p class="subtitle">Ich-kann-Ziele · Übersicht der Fertigkeiten, die bis zu den Herbstferien erworben werden</p>
+  </header>
+
+  <div class="toolbar no-print">
+    <button id="printBtn">Drucken</button>
+    <button id="resetBtn" class="secondary">Zurücksetzen</button>
+  </div>
+
+  <div class="progress-wrap no-print">
+    <div class="progress-row">
+      <span class="label">Erklärt</span>
+      <div class="bar-track"><div class="bar-fill erklaert" id="barErklaert" style="width:0%"></div></div>
+      <span class="count" id="countErklaert">0/0</span>
+    </div>
+    <div class="progress-row">
+      <span class="label">Angewendet</span>
+      <div class="bar-track"><div class="bar-fill angewendet" id="barAngewendet" style="width:0%"></div></div>
+      <span class="count" id="countAngewendet">0/0</span>
+    </div>
+  </div>
+
+  <section class="group">
+    <h2>1. Technische Voraussetzungen</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="tv1"><span class="desc">Ich kann mich in der Schul-App anmelden.</span><div class="checks"></div></div>
+    <div class="item" data-id="tv2"><span class="desc">Ich kann mein iPad mit dem WLAN der Schule verbinden.</span><div class="checks"></div></div>
+    <div class="item" data-id="tv3"><span class="desc">Ich kann mein iPad laden und weiß, wie ich das Ladekabel richtig benutze.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>2. Allgemeine Bedienung</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="ab1"><span class="desc">Ich kann mein iPad ein- und ausschalten und den Sperrbildschirm entsperren.</span><div class="checks"></div></div>
+    <div class="item" data-id="ab2"><span class="desc">Ich kann einen Screenshot erstellen.</span><div class="checks"></div></div>
+    <div class="item" data-id="ab3"><span class="desc">Ich kann das Kontrollzentrum öffnen und nutzen.</span><div class="checks"></div></div>
+    <div class="item" data-id="ab4"><span class="desc">Ich kann die Lautstärke lauter und leiser stellen.</span><div class="checks"></div></div>
+    <div class="item" data-id="ab5"><span class="desc">Ich kann die Bildschirmhelligkeit einstellen.</span><div class="checks"></div></div>
+    <div class="item" data-id="ab6"><span class="desc">Ich kann mein iPad mit dem Apple TV verbinden.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>3. Dateiverwaltung</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="dv1"><span class="desc">Ich weiß, wie die Dateien-App aufgebaut ist.</span><div class="checks"></div></div>
+    <div class="item" data-id="dv2"><span class="desc">Ich kann mich in der Dateistruktur zurechtfinden (Speicherorte, Ordner).</span><div class="checks"></div></div>
+    <div class="item" data-id="dv3"><span class="desc">Ich kann eine Datei richtig benennen und abspeichern.</span><div class="checks"></div></div>
+    <div class="item" data-id="dv4"><span class="desc">Ich kann eine Datei hochladen.</span><div class="checks"></div></div>
+    <div class="item" data-id="dv5"><span class="desc">Ich kann eine Datei herunterladen.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>4. Arbeitsorganisation</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="ao1"><span class="desc">Ich kann einen Ordner anlegen und wiederfinden.</span><div class="checks"></div></div>
+    <div class="item" data-id="ao2"><span class="desc">Ich kann einen QR-Code scannen.</span><div class="checks"></div></div>
+    <div class="item" data-id="ao3"><span class="desc">Ich kann mit Safari im Internet recherchieren.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>5. Apps</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="ap1"><span class="desc">Ich kann in Pages ein Dokument erstellen und bearbeiten.</span><div class="checks"></div></div>
+    <div class="item" data-id="ap2"><span class="desc">Ich kann in Keynote eine Präsentation erstellen und bearbeiten.</span><div class="checks"></div></div>
+    <div class="item" data-id="ap3"><span class="desc">Ich kann in GoodNotes Notizen erstellen, Dateien importieren und exportieren und die Stiftfunktionen nutzen.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>6. Schuleigenes Portal</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="sp1"><span class="desc">Ich kann mich im Schulportal anmelden.</span><div class="checks"></div></div>
+    <div class="item" data-id="sp2"><span class="desc">Ich kann Materialien im Schulportal finden und öffnen.</span><div class="checks"></div></div>
+    <div class="item" data-id="sp3"><span class="desc">Ich kann Aufgaben im Schulportal hoch- und herunterladen.</span><div class="checks"></div></div>
+  </section>
+
+  <section class="group">
+    <h2>7. Verantwortung &amp; Regeln</h2>
+    <div class="col-headers"><span class="ghost"></span><span><span class="full">Erklärt</span><span class="short">Erkl.</span></span><span><span class="full">Angewendet</span><span class="short">Ang.</span></span></div>
+    <div class="item" data-id="vr1"><span class="desc">Ich kenne die Nutzungsordnung und die Verhaltensregeln für das iPad.</span><div class="checks"></div></div>
+    <div class="item" data-id="vr2"><span class="desc">Ich kann verantwortungsvoll mit Fotos und Videos von Mitschüler:innen umgehen.</span><div class="checks"></div></div>
+    <div class="item" data-id="vr3"><span class="desc">Ich kann einfache Probleme selbst lösen (z. B. Neustart) und weiß, wann ich Hilfe holen muss.</span><div class="checks"></div></div>
+  </section>
+
+  <footer>
+    Digital: Klick auf ein Feld speichert den Fortschritt im Browser dieses Geräts. Ausgedruckt erscheinen alle Felder leer zum handschriftlichen Abhaken.
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var STORAGE_KEY = "ipad_checkliste_jg5_v1";
+  var state = {};
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw) state = JSON.parse(raw);
+    }catch(e){ state = {}; }
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch(e){ /* Speichern nicht verfügbar, still fortfahren */ }
+  }
+
+  function buildCheckboxes(){
+    document.querySelectorAll(".item").forEach(function(item){
+      var id = item.getAttribute("data-id");
+      var checksEl = item.querySelector(".checks");
+      ["erklaert","angewendet"].forEach(function(stage){
+        var box = document.createElement("span");
+        box.className = "checkbox";
+        box.setAttribute("data-stage", stage);
+        box.setAttribute("data-id", id);
+        box.setAttribute("role","checkbox");
+        box.setAttribute("tabindex","0");
+        var checked = !!(state[id] && state[id][stage]);
+        box.setAttribute("aria-checked", checked);
+        if(checked) box.classList.add("checked");
+        box.addEventListener("click", function(){ toggle(id, stage, box); });
+        box.addEventListener("keydown", function(e){
+          if(e.key === "Enter" || e.key === " "){ e.preventDefault(); toggle(id, stage, box); }
+        });
+        checksEl.appendChild(box);
+      });
+    });
+  }
+
+  function toggle(id, stage, box){
+    if(!state[id]) state[id] = {};
+    state[id][stage] = !state[id][stage];
+    box.classList.toggle("checked", state[id][stage]);
+    box.setAttribute("aria-checked", state[id][stage]);
+    saveState();
+    updateProgress();
+  }
+
+  function updateProgress(){
+    var items = document.querySelectorAll(".item");
+    var total = items.length;
+    var eCount = 0, aCount = 0;
+    items.forEach(function(item){
+      var id = item.getAttribute("data-id");
+      if(state[id] && state[id].erklaert) eCount++;
+      if(state[id] && state[id].angewendet) aCount++;
+    });
+    document.getElementById("barErklaert").style.width = (total? (eCount/total*100):0) + "%";
+    document.getElementById("barAngewendet").style.width = (total? (aCount/total*100):0) + "%";
+    document.getElementById("countErklaert").textContent = eCount + "/" + total;
+    document.getElementById("countAngewendet").textContent = aCount + "/" + total;
+  }
+
+  document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+  document.getElementById("resetBtn").addEventListener("click", function(){
+    if(confirm("Gesamten Fortschritt auf diesem Gerät zurücksetzen?")){
+      state = {};
+      saveState();
+      document.querySelectorAll(".checkbox").forEach(function(box){
+        box.classList.remove("checked");
+        box.setAttribute("aria-checked","false");
+      });
+      updateProgress();
+    }
+  });
+
+  loadState();
+  buildCheckboxes();
+  updateProgress();
+})();
+</script>
+</body>
+</html>
